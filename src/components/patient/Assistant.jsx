@@ -8,7 +8,7 @@ const Assistant = () => {
 	const [messages, setMessages] = useState([
 		{
 			sender: "assistant",
-			text: "I am Apomuden Assistant. How can I help you today?",
+			text: "I am CarePulse Assistant. How can I help you today?",
 			time: new Date().toLocaleTimeString(),
 		},
 	]);
