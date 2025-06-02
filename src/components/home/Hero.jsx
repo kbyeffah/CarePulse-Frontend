@@ -7,7 +7,7 @@ const Hero = () => {
 				<h1 className="text-4xl md:text-7xl font-bold">CarePulse AI</h1>
 				<p className="text-lg text-[#3f9669] font-bold">Speak health in your own language</p>
 				<p className="text-lg text-zinc-500 max-w-xl ">
-					An AI-powered HealthTech that ensures that beneficiaries of diaspora families have access to quality healthcare services without the immediate financial burden.
+					An AI-powered HealthTech solution that ensures diaspora families can provide quality healthcare for their loved ones without the immediate financial burden on patients and with full transparency.
 				</p>
 
 				<div className="flex gap-x-5 ">
