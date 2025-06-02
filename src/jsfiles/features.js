@@ -60,8 +60,8 @@ const keyfeatures = [
 	},
 	{
 		icon: HiOutlineSpeakerXMark,
-		feature: "Voice for the Voiceless",
-		text: "Empowering those with speech disabilities to communicate effectively.",
+		feature: "Seamless Tracking",
+		text: "Real-time updates on patient status, appointments and prescriptions.",
 	},
 	{
 		icon: HiOutlineSpeakerWave,
