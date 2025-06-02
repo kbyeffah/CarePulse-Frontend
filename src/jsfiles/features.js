@@ -65,7 +65,7 @@ const keyfeatures = [
 	},
 	{
 		icon: HiOutlineSpeakerWave,
-		feature: "Apomuden Assistant",
+		feature: "CarePulse Assistant",
 		text: "AI-powered health companion in your local language.",
 	},
 ];
