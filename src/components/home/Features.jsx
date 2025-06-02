@@ -7,7 +7,7 @@ const Features = () => {
 		<section className="bg-[#f9fafb] p-[10%]">
 			<div className="text-center space-y-2">
 				<h1 className="text-4xl font-bold">Key Features</h1>
-				<p className="text-[#71717a]">Our platform bridges the communication gap in healthcare with these powerful features</p>
+				<p className="text-[#71717a]">An AI assistant that provides personalized health insights, ensuring continuous, transparent, and high-quality care in Ghana and beyond.</p>
 			</div>
 
 			<div className="md:grid grid-cols-3 gap-x-4 gap-y-4 mt-10">
