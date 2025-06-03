@@ -280,7 +280,7 @@ function HealthcareWorker() {
 					{/* Dashboard Header */}
 					<div className="flex justify-between items-center mb-6">
 						<div className="flex items-center">
-							<h2 className="text-xl font-bold text-gray-900 mr-3">Healthcare Worker Dashboard</h2>
+							<h2 className="text-xl font-bold text-gray-900 mr-3">Health Worker Dashboard</h2>
 							<span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md">
 								Staff
 							</span>

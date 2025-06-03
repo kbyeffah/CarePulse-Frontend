@@ -7,7 +7,7 @@ const Footer = () => {
 			<div className="flex justify-between items-center">
 				<div>
 					<h1>CarePulse AI</h1>
-					<p>Speak Health in your own language</p>
+					<p>Join us in making healthcare more seamless and transparent</p>
 				</div>
 				<div className="flex">
 					{footerlinks.map((item, index) => (

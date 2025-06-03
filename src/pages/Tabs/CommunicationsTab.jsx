@@ -286,7 +286,7 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
                 Live Chat
               </button>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Patient Communications</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Live Tracking</h3>
           </div>
 
           {/* Content */}
@@ -307,7 +307,7 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
             <MessageSquare className="h-8 w-8 text-gray-400" />
           </div>
-          <h4 className="text-lg font-medium text-gray-900 mb-2">Patient Communications</h4>
+          <h4 className="text-lg font-medium text-gray-900 mb-2">Live Tracking</h4>
           <p className="text-sm text-gray-500">Select a patient to view their communication history</p>
         </div>
       )}
