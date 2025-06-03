@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 function CommunicationsTab({ patients, patientCommunications, selectedPatient }) {
-  const [activeView, setActiveView] = useState("history"); // "history" or "chat"
+  const [activeView, setActiveView] = useState("history");
   const [newMessage, setNewMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([
     {
@@ -99,32 +99,30 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
   const selectedPatientData = patients?.find(p => p.id === selectedPatient);
 
   const renderChatInterface = () => (
-    <div className="flex flex-col h-full">
-      {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+    <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--background-color)' }}>
+      <div className="flex items-center justify-between p-4 border-b" style={{ borderBottomColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
         <div className="flex items-center">
           <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium">
             {selectedPatientData?.name?.charAt(0)}
           </div>
           <div className="ml-3">
-            <h4 className="text-sm font-medium text-gray-900">{selectedPatientData?.name}</h4>
+            <h4 className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>{selectedPatientData?.name}</h4>
             <p className="text-xs text-green-600">Online</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+          <button className="p-2 rounded" style={{ color: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
             <Phone className="w-4 h-4" />
           </button>
-          <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+          <button className="p-2 rounded" style={{ color: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
             <MoreVertical className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ backgroundColor: 'var(--card-bg)' }}>
         <div className="text-center">
-          <span className="text-xs text-gray-500 bg-white px-3 py-1 rounded-full">
+          <span className="text-xs px-3 py-1 rounded-full" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
             Communication History
           </span>
         </div>
@@ -134,8 +132,8 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
             <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
               msg.sender === 'healthcare_worker' 
                 ? 'bg-blue-500 text-white' 
-                : 'bg-white text-gray-900 border border-gray-200'
-            }`}>
+                : 'border' 
+            }`} style={{ borderColor: 'var(--text-color)', backgroundColor: msg.sender === 'healthcare_worker' ? 'var(--text-color)' : 'var(--card-bg)', color: 'var(--text-color)' }}>
               <p className="text-sm">{msg.message}</p>
               <div className={`flex items-center justify-end mt-1 space-x-1 ${
                 msg.sender === 'healthcare_worker' ? 'text-blue-100' : 'text-gray-500'
@@ -156,8 +154,7 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
         ))}
       </div>
 
-      {/* Message Input */}
-      <div className="p-4 bg-white border-t border-gray-200">
+      <div className="p-4 border-t" style={{ borderTopColor: 'var(--text-color)', backgroundColor: 'var(--background-color)' }}>
         <div className="flex items-end space-x-2">
           <div className="flex-1 relative">
             <textarea
@@ -165,16 +162,16 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
-              className="w-full resize-none border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="w-full resize-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               rows="1"
-              style={{ minHeight: '40px', maxHeight: '120px' }}
+              style={{ minHeight: '40px', maxHeight: '120px', borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)', color: 'var(--text-color)' }}
             />
           </div>
           <div className="flex items-center space-x-1">
-            <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+            <button className="p-2 rounded" style={{ color: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
               <Paperclip className="w-4 h-4" />
             </button>
-            <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+            <button className="p-2 rounded" style={{ color: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
               <Smile className="w-4 h-4" />
             </button>
             <button
@@ -196,40 +193,41 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
 
   const renderHistoryView = () => (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
         <div>
-          <h4 className="text-md font-medium text-gray-900">
+          <h4 className="text-md font-medium" style={{ color: 'var(--text-color)' }}>
             {selectedPatientData?.name}'s Communications
           </h4>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm" style={{ color: 'var(--text-color)' }}>
             Recent patient interactions and messages
           </p>
         </div>
         <div className="flex space-x-2">
           <button 
             onClick={() => setActiveView("chat")}
-            className="bg-green-600 text-white px-3 py-1 rounded-md text-sm flex items-center hover:bg-green-700"
+            className="px-3 py-1 rounded-md text-sm flex items-center hover:bg-green-700"
+            style={{ backgroundColor: 'var(--text-color)', color: 'var(--background-color)' }}
           >
             <MessageSquare className="w-4 h-4 mr-1" />
             Chat
           </button>
-          <button className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm flex items-center hover:bg-blue-700">
+          <button className="px-3 py-1 rounded-md text-sm flex items-center hover:bg-blue-700" style={{ backgroundColor: 'var(--text-color)', color: 'var(--background-color)' }}>
             <Phone className="w-4 h-4 mr-1" />
             Call
           </button>
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
         {patientCommunications
           ?.filter(comm => comm.patientId === selectedPatient)
           .map(comm => (
-            <div key={comm.id} className="border border-gray-200 rounded-md p-3 hover:bg-gray-50 flex justify-between items-center">
+            <div key={comm.id} className="rounded-md p-3 hover:bg-gray-50 flex justify-between items-center" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
               <div className="flex items-center">
                 {getCommunicationTypeIcon(comm.type)}
                 <div className="ml-3">
-                  <h5 className="text-sm font-medium text-gray-900">{comm.title}</h5>
-                  <p className="text-xs text-gray-500">{comm.type} - {comm.date} by {comm.staff}</p>
+                  <h5 className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>{comm.title}</h5>
+                  <p className="text-xs" style={{ color: 'var(--text-color)' }}>{comm.type} - {comm.date} by {comm.staff}</p>
                 </div>
               </div>
               <div className="flex items-center">
@@ -248,7 +246,8 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
             <p className="text-gray-500">No communication history found for this patient.</p>
             <button 
               onClick={() => setActiveView("chat")}
-              className="mt-2 bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700"
+              className="mt-2 px-4 py-2 rounded-md text-sm hover:bg-green-700"
+              style={{ backgroundColor: 'var(--text-color)', color: 'var(--background-color)' }}
             >
               Start New Conversation
             </button>
@@ -259,11 +258,10 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
   );
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className="rounded-lg overflow-hidden" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--background-color)' }}>
       {selectedPatient ? (
         <div className="h-[600px] flex flex-col">
-          {/* Tab Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between p-4 border-b" style={{ borderBottomColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
             <div className="flex space-x-1">
               <button
                 onClick={() => setActiveView("history")}
@@ -286,10 +284,9 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
                 Live Chat
               </button>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Live Tracking</h3>
+            <h3 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>Live Tracking</h3>
           </div>
 
-          {/* Content */}
           <div className="flex-1 overflow-hidden">
             {activeView === "chat" ? (
               <div className="h-full">
@@ -303,12 +300,12 @@ function CommunicationsTab({ patients, patientCommunications, selectedPatient })
           </div>
         </div>
       ) : (
-        <div className="h-64 flex flex-col items-center justify-center text-center p-4">
+        <div className="h-64 flex flex-col items-center justify-center text-center p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
             <MessageSquare className="h-8 w-8 text-gray-400" />
           </div>
-          <h4 className="text-lg font-medium text-gray-900 mb-2">Live Tracking</h4>
-          <p className="text-sm text-gray-500">Select a patient to view their communication history</p>
+          <h4 className="text-lg font-medium mb-2" style={{ color: 'var(--text-color)' }}>Live Tracking</h4>
+          <p className="text-sm" style={{ color: 'var(--text-color)' }}>Select a patient to view their communication history</p>
         </div>
       )}
     </div>

@@ -8,77 +8,90 @@ import { NavLink } from "react-router";
 import { Menu, X } from "lucide-react";
 
 const NavBar = () => {
-	const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-	return (
-		<section className={`border border-b-gray-300 p-4 items-center fixed top-0 right-0 left-0 bg-white/60 backdrop-blur-md z-50 ${isOpen ? "h-screen" : "h-auto"}`}>
-			<div className="flex justify-between items-center">
-				<div className=" text-[#3f9669] font-semibold">CarePulse AI</div>
-				<ul className="hidden justify-end md:flex gap-x-5">
-					{navigation.map((navitems, index) => (
-						<NavLink
-							to={navitems.path}
-							key={index}
-							className={({ isActive }) =>
-								`flex items-center gap-1 hover:text-[#3f9669] hover:bg-gray-100 px-4 py-1 cursor-pointer ${
-									isActive ? "text-[#3f9669] bg-gray-100 px-4 py-1 rounded-md" : "text-gray-600"
-								}`
-							}
-						>
-							<navitems.icon />
-							{navitems.name}
-						</NavLink>
-					))}
-					<div className="flex gap-5 items-center">
-						<Dropdown />
-						<div className="items-center flex border border-gray-300 px-2 py-1 rounded-md">
-							<p>
-								<Mode />
-							</p>
-						</div>
-						<button className="bg-[#Ef5257] text-white px-3 py-2 rounded-md">Emergency</button>
-						<p>KA</p>
-					</div>
-				</ul>
-				<div className="md:hidden ">
-					{isOpen ? (
-						<X size={24} onClick={() => setIsOpen(false)} />
-					) : (
-						<Menu size={24} onClick={() => setIsOpen(true)} />
-					)}
-				</div>
-			</div>
+  return (
+    <section
+      className={`border border-b-gray-300 p-4 items-center fixed top-0 right-0 left-0 bg-white/60 backdrop-blur-md z-50 ${isOpen ? "h-screen" : "h-auto"}`}
+      style={{ backgroundColor: 'var(--background-color)', borderBottomColor: 'var(--text-color)' }}
+    >
+      <div className="flex justify-between items-center">
+        <div className="text-[#3f9669] font-semibold" style={{ color: 'var(--text-color)' }}>CarePulse AI</div>
+        <ul className="hidden justify-end md:flex gap-x-5">
+          {navigation.map((navitems, index) => (
+            <NavLink
+              to={navitems.path}
+              key={index}
+              className={({ isActive }) =>
+                `flex items-center gap-1 hover:text-[#3f9669] hover:bg-gray-100 px-4 py-1 cursor-pointer ${
+                  isActive ? "text-[#3f9669] bg-gray-100 px-4 py-1 rounded-md" : "text-gray-600"
+                }`
+              }
+              style={({ isActive }) => ({
+                color: 'var(--text-color)',
+                backgroundColor: isActive ? 'var(--card-bg)' : 'transparent',
+                ':hover': { backgroundColor: 'var(--card-bg)' },
+              })}
+            >
+              {navitems.icon}
+              {navitems.name}
+            </NavLink>
+          ))}
+          <div className="flex gap-5 items-center">
+            <Dropdown />
+            <div className="items-center flex border border-gray-300 px-2 py-1 rounded-md" style={{ borderColor: 'var(--text-color)' }}>
+              <p>
+                <Mode />
+              </p>
+            </div>
+            <button className="bg-[#Ef5257] text-white px-3 py-2 rounded-md" style={{ backgroundColor: 'var(--text-color)', color: 'var(--background-color)' }}>Emergency</button>
+            <p style={{ color: 'var(--text-color)' }}>KA</p>
+          </div>
+        </ul>
+        <div className="md:hidden">
+          {isOpen ? (
+            <X size={24} color={isOpen ? 'var(--background-color)' : 'var(--text-color)'} onClick={() => setIsOpen(false)} />
+          ) : (
+            <Menu size={24} color={isOpen ? 'var(--background-color)' : 'var(--text-color)'} onClick={() => setIsOpen(true)} />
+          )}
+        </div>
+      </div>
 
-			{isOpen && (
-				<ul className="space-y-4 mt-5 w-full">
-					{navigation.map((navitems, index) => (
-						<NavLink
-							to={navitems.path}
-							key={index}
-							className={({ isActive }) =>
-								`flex items-center gap-1 hover:text-[#3f9669] hover:bg-gray-100 px-4 py-1 cursor-pointer ${
-									isActive ? "text-[#3f9669] bg-gray-100 px-4 py-1 rounded-md" : "text-gray-600"
-								}`
-							}
-						>
-							<navitems.icon />
-							{navitems.name}
-						</NavLink>
-					))}
-					<div className="md:hidden space-y-4 ml-2">
-						<Dropdown />
-						<div className="items-center flex border border-gray-300 px-2 py-1 rounded-md">
-							<p>
-								<Mode />
-							</p>
-						</div>
-						<button className="bg-[#Ef5257] text-white px-3 py-2 rounded-md">Emergency</button>
-						<p>KA</p>
-					</div>
-				</ul>
-			)}
-		</section>
-	);
+      {isOpen && (
+        <ul className="space-y-4 mt-5 w-full">
+          {navigation.map((navitems, index) => (
+            <NavLink
+              to={navitems.path}
+              key={index}
+              className={({ isActive }) =>
+                `flex items-center gap-1 hover:text-[#3f9669] hover:bg-gray-100 px-4 py-1 cursor-pointer ${
+                  isActive ? "text-[#3f9669] bg-gray-100 px-4 py-1 rounded-md" : "text-gray-600"
+                }`
+              }
+              style={({ isActive }) => ({
+                color: 'var(--text-color)',
+                backgroundColor: isActive ? 'var(--card-bg)' : 'transparent',
+                ':hover': { backgroundColor: 'var(--card-bg)' },
+              })}
+            >
+              {navitems.icon}
+              {navitems.name}
+            </NavLink>
+          ))}
+          <div className="md:hidden space-y-4 ml-2">
+            <Dropdown />
+            <div className="items-center flex border border-gray-300 px-2 py-1 rounded-md" style={{ borderColor: 'var(--text-color)' }}>
+              <p>
+                <Mode />
+              </p>
+            </div>
+            <button className="bg-[#Ef5257] text-white px-3 py-2 rounded-md" style={{ backgroundColor: 'var(--text-color)', color: 'var(--background-color)' }}>Emergency</button>
+            <p style={{ color: 'var(--text-color)' }}>KA</p>
+          </div>
+        </ul>
+      )}
+    </section>
+  );
 };
 
 export default NavBar;

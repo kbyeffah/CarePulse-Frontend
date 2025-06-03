@@ -11,7 +11,6 @@ function PatientsTab({ patients, selectedPatient, setSelectedPatient }) {
     }
   };
 
-  // Enhanced patient data with detailed medical information
   const enhancedPatients = [
     {
       id: 1,
@@ -165,7 +164,6 @@ function PatientsTab({ patients, selectedPatient, setSelectedPatient }) {
     }
   ];
 
-  // Find selected patient data from enhanced data or create default data
   const selectedPatientData = enhancedPatients.find(p => p.id === selectedPatient) || 
     (selectedPatient ? {
       ...patients.find(p => p.id === selectedPatient),
@@ -202,105 +200,101 @@ function PatientsTab({ patients, selectedPatient, setSelectedPatient }) {
 
   return (
     <div className="flex space-x-6">
-      {/* Patient List */}
-      <div className="w-1/3 bg-white border border-gray-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">Patient List</h3>
-        <p className="text-sm text-gray-500 mb-4">Select a patient to view their details</p>
+      <div className="w-1/3 p-4 rounded-lg" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--background-color)' }}>
+        <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-color)' }}>Patient List</h3>
+        <p className="text-sm mb-4" style={{ color: 'var(--text-color)' }}>Select a patient to view their details</p>
 
         <div className="relative mb-4">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
+            <Search className="h-4 w-4" style={{ color: 'var(--text-color)' }} />
           </div>
           <input
             type="text"
             placeholder="Filter patients..."
-            className="pl-9 pr-4 py-2 border border-gray-200 rounded-md focus:ring-blue-500 focus:border-blue-500 w-full text-sm"
+            className="pl-9 pr-4 py-2 rounded-md w-full text-sm"
+            style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)', color: 'var(--text-color)' }}
           />
         </div>
 
-        {/* Scrollable patient list */}
         <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
           {(patients || enhancedPatients).map((patient) => (
             <div
               key={patient.id}
-              className={`flex items-center px-3 py-3 rounded-md cursor-pointer border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+              className={`flex items-center px-3 py-3 rounded-md cursor-pointer border-b hover:bg-gray-50 transition-colors ${
                 selectedPatient === patient.id ? "bg-blue-50 border-blue-200" : ""
               }`}
+              style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}
               onClick={() => setSelectedPatient(patient.id)}
             >
               <div className="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-500" />
+                <User className="h-4 w-4" style={{ color: 'var(--text-color)' }} />
               </div>
               <div className="ml-3 flex-1">
                 <div className="flex justify-between">
-                  <h4 className="text-sm font-medium text-gray-900">{patient.name}</h4>
+                  <h4 className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>{patient.name}</h4>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusBadgeClass(patient.status)}`}>
                     {patient.status}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600">{patient.age}, {patient.gender}</p>
-                <p className="text-sm font-medium text-gray-800">{patient.condition}</p>
-                <p className="text-xs text-gray-400">Updated {patient.lastUpdated}</p>
+                <p className="text-sm" style={{ color: 'var(--text-color)' }}>{patient.age}, {patient.gender}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>{patient.condition}</p>
+                <p className="text-xs" style={{ color: 'var(--text-color)' }}>Updated {patient.lastUpdated}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Patient Details */}
-      <div className="w-2/3 bg-white border border-gray-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">Patient Details</h3>
-        <p className="text-sm text-gray-500 mb-4">View and manage patient information</p>
+      <div className="w-2/3 p-4 rounded-lg" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--background-color)' }}>
+        <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-color)' }}>Patient Details</h3>
+        <p className="text-sm mb-4" style={{ color: 'var(--text-color)' }}>View and manage patient information</p>
 
         {selectedPatientData ? (
           <div className="space-y-6">
-            {/* Patient Info and Vital Signs Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Patient Information */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
                 <div className="flex items-center mb-3">
                   <User className="h-5 w-5 text-blue-600 mr-2" />
-                  <h4 className="text-lg font-semibold text-gray-900">Patient Information</h4>
+                  <h4 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>Patient Information</h4>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Name:</span>
-                    <span className="text-sm text-gray-900">{selectedPatientData.name}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Name:</span>
+                    <span className="text-sm" style={{ color: 'var(--text-color)' }}>{selectedPatientData.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Age:</span>
-                    <span className="text-sm text-gray-900">{selectedPatientData.age} years</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Age:</span>
+                    <span className="text-sm" style={{ color: 'var(--text-color)' }}>{selectedPatientData.age} years</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Gender:</span>
-                    <span className="text-sm text-blue-600 font-medium">{selectedPatientData.gender}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Gender:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>{selectedPatientData.gender}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Condition:</span>
-                    <span className="text-sm text-gray-900">{selectedPatientData.condition}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Condition:</span>
+                    <span className="text-sm" style={{ color: 'var(--text-color)' }}>{selectedPatientData.condition}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Status:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Status:</span>
                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusBadgeClass(selectedPatientData.status)}`}>
                       {selectedPatientData.status}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Last Visit:</span>
-                    <span className="text-sm text-gray-900">{selectedPatientData.lastVisit}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Last Visit:</span>
+                    <span className="text-sm" style={{ color: 'var(--text-color)' }}>{selectedPatientData.lastVisit}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-600">Next Appointment:</span>
-                    <span className="text-sm text-gray-900">{selectedPatientData.nextAppointment}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>Next Appointment:</span>
+                    <span className="text-sm" style={{ color: 'var(--text-color)' }}>{selectedPatientData.nextAppointment}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Symptoms & Complaints */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
                 <div className="flex items-center mb-3">
                   <Activity className="h-5 w-5 text-red-600 mr-2" />
-                  <h4 className="text-lg font-semibold text-gray-900">Symptoms & Complaints</h4>
+                  <h4 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>Symptoms & Complaints</h4>
                 </div>
                 <div className="space-y-3">
                   {selectedPatientData.symptoms && selectedPatientData.symptoms.length > 0 ? (
@@ -308,8 +302,8 @@ function PatientsTab({ patients, selectedPatient, setSelectedPatient }) {
                       <div key={index} className="flex items-start">
                         <div className="w-2 h-2 rounded-full bg-red-500 mr-3 mt-2 flex-shrink-0"></div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900">{symptom}</p>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>{symptom}</p>
+                          <p className="text-xs mt-1" style={{ color: 'var(--text-color)' }}>
                             {index === 0 ? "Primary complaint" : 
                              index === 1 ? "Secondary symptom" : 
                              "Additional symptom"}
@@ -329,72 +323,66 @@ function PatientsTab({ patients, selectedPatient, setSelectedPatient }) {
                   ) : (
                     <div className="flex items-center text-green-600">
                       <div className="w-2 h-2 rounded-full bg-green-500 mr-3"></div>
-                      <p className="text-sm font-medium">No current symptoms reported</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>No current symptoms reported</p>
                     </div>
                   )}
                 </div>
                 
-                {/* Chief Complaint Section */}
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <h5 className="text-sm font-semibold text-gray-700 mb-2">Chief Complaint:</h5>
-                  <p className="text-sm text-gray-900 bg-white p-3 rounded border-l-4 border-red-500">
+                <div className="mt-4 pt-4 border-t" style={{ borderTopColor: 'var(--text-color)' }}>
+                  <h5 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Chief Complaint:</h5>
+                  <p className="text-sm p-3 rounded border-l-4" style={{ borderLeftColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)', color: 'var(--text-color)' }}>
                     {selectedPatientData.condition || "General consultation"}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Clinical Notes */}
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
               <div className="flex items-center mb-3">
                 <div className="w-5 h-5 bg-green-100 rounded mr-2 flex items-center justify-center">
                   <div className="w-2 h-2 bg-green-600 rounded"></div>
                 </div>
-                <h4 className="text-lg font-semibold text-gray-900">Clinical Notes</h4>
+                <h4 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>Clinical Notes</h4>
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed">{selectedPatientData.clinicalNotes}</p>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-color)' }}>{selectedPatientData.clinicalNotes}</p>
             </div>
 
-            {/* Additional Information Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Symptoms */}
-              <div className="bg-red-50 rounded-lg p-4">
-                <h5 className="text-sm font-semibold text-red-800 mb-2">Current Symptoms</h5>
+              <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
+                <h5 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Current Symptoms</h5>
                 <ul className="space-y-1">
                   {selectedPatientData.symptoms.map((symptom, index) => (
-                    <li key={index} className="text-sm text-red-700">• {symptom}</li>
+                    <li key={index} className="text-sm" style={{ color: 'var(--text-color)' }}>• {symptom}</li>
                   ))}
                 </ul>
               </div>
 
-              {/* Medications */}
-              <div className="bg-blue-50 rounded-lg p-4">
-                <h5 className="text-sm font-semibold text-blue-800 mb-2">Current Medications</h5>
+              <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
+                <h5 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Current Medications</h5>
                 <ul className="space-y-1">
                   {selectedPatientData.medications.map((medication, index) => (
-                    <li key={index} className="text-sm text-blue-700">• {medication}</li>
+                    <li key={index} className="text-sm" style={{ color: 'var(--text-color)' }}>• {medication}</li>
                   ))}
                 </ul>
               </div>
 
-              {/* Allergies */}
-              <div className="bg-yellow-50 rounded-lg p-4">
-                <h5 className="text-sm font-semibold text-yellow-800 mb-2">Known Allergies</h5>
+              <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card-bg)' }}>
+                <h5 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Known Allergies</h5>
                 <ul className="space-y-1">
                   {selectedPatientData.allergies.map((allergy, index) => (
-                    <li key={index} className="text-sm text-yellow-700">• {allergy}</li>
+                    <li key={index} className="text-sm" style={{ color: 'var(--text-color)' }}>• {allergy}</li>
                   ))}
                 </ul>
               </div>
             </div>
           </div>
         ) : (
-          <div className="h-64 flex flex-col items-center justify-center text-center">
+          <div className="h-64 flex flex-col items-center justify-center text-center" style={{ backgroundColor: 'var(--card-bg)' }}>
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
               <User className="h-8 w-8 text-gray-400" />
             </div>
-            <h4 className="text-lg font-medium text-gray-900 mb-2">No Patient Selected</h4>
-            <p className="text-sm text-gray-500">Select a patient from the list to view their details</p>
+            <h4 className="text-lg font-medium mb-2" style={{ color: 'var(--text-color)' }}>No Patient Selected</h4>
+            <p className="text-sm" style={{ color: 'var(--text-color)' }}>Select a patient from the list to view their details</p>
           </div>
         )}
       </div>

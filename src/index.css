@@ -4,3 +4,39 @@
 /* :root {
 	font-family: "Poppins";
 } */
+/* Default (light) theme */
+:root, .light {
+  --background-color: #ffffff; /* White background in light mode */
+  --text-color: #000000;      /* Black text in light mode */
+  --card-bg: #ffffff;         /* White card background in light mode */
+}
+
+/* Dark theme (inverted) */
+.dark {
+  --background-color: #000000; /* Black background in dark mode */
+  --text-color: #ffffff;      /* White text in dark mode */
+  --card-bg: #000000;         /* Black card background in dark mode */
+}
+
+/* Apply theme variables */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Example for components */
+.card {
+  background-color: var(--card-bg);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* Ensure the dropdown in Mode.jsx looks good in both themes */
+.absolute {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.absolute button:hover {
+  background-color: var(--card-bg);
+}

@@ -8,52 +8,53 @@ import HealthCare from "./HealthCare";
 import Symptom from "./Symptom";
 import Medication from "./Medication";
 
+
 const HomePatient = () => {
-	const [activeTab, setActiveTab] = useState("Assistant");
-	return (
-		<section className=" mt-[8%] px-5 space-y-5">
-			<div className="flex justify-between items-center">
-				<h1 className="text-4xl font-semibold">Patient Interface</h1>
-				<Link
-					to={"/"}
-					className="bg-[#f9fafb] border border-gray-300 px-2 py-1 rounded-md flex items-center gap-x-2"
-				>
-					<BiArrowBack />
-					Back to Home
-				</Link>
-			</div>
+  const [activeTab, setActiveTab] = useState("Assistant");
+  return (
+    <section className="mt-[8%] px-5 space-y-5" style={{ backgroundColor: 'var(--background-color)' }}>
+      <div className="flex justify-between items-center">
+        <h1 className="text-4xl font-semibold" style={{ color: 'var(--text-color)' }}>Patient Interface</h1>
+        <Link
+          to="/"
+          className="px-2 py-1 rounded-md flex items-center gap-x-2"
+          style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--text-color)', color: 'var(--text-color)' }}
+        >
+          <BiArrowBack />
+          Back to Home
+        </Link>
+      </div>
 
-			<div className="flex justify-between items-center">
-				<h1 className="text-xl font-semibold">CarePulse Assistant</h1>
-				<button className="bg-[#ef4444] flex text-white items-center px-3 py-1 rounded-md">
-					<GrEmergency />
-					Emergency
-				</button>
-			</div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>CarePulse Assistant</h1>
+        <button className="flex items-center px-3 py-1 rounded-md" style={{ backgroundColor: 'var(--text-color)', color: 'var(--background-color)' }}>
+          <GrEmergency />
+          Emergency
+        </button>
+      </div>
 
-			<div className="flex justify-between items-center bg-[#f4f4f5] py-3 px-3 ">
-				{patientnav.map((item) => (
-					<div
-						key={item.id}
-						onClick={() => setActiveTab(item.id)}
-						className={`flex justify-center gap-x-2 items-center cursor-pointer w-full ${
-							activeTab === item.id ? "bg-white text-black  py-1" : "text-[#71717a]"
-						}`}
-					>
-						<item.icon />
-						<p className={`${activeTab === item.id ? "text-black" : "text-[#71717a]"}`}>{item.text}</p>
-					</div>
-				))}
-			</div>
+      <div className="flex justify-between items-center py-3 px-3" style={{ backgroundColor: 'var(--card-bg)' }}>
+        {patientnav.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            className="flex justify-center gap-x-2 items-center cursor-pointer w-full py-1"
+            style={{ backgroundColor: activeTab === item.id ? 'var(--background-color)' : 'transparent', color: 'var(--text-color)' }}
+          >
+            <item.icon />
+            <p style={{ color: 'var(--text-color)' }}>{item.text}</p>
+          </div>
+        ))}
+      </div>
 
-			<div>
-				{activeTab === "Assistant" && <Assistant />}
-				{activeTab === "HealthCare" && <HealthCare />}
-				{activeTab === "Visual" && <Symptom />}
-				{activeTab === "Medication" && <Medication />}
-			</div>
-		</section>
-	);
+      <div>
+        {activeTab === "Assistant" && <Assistant />}
+        {activeTab === "HealthCare" && <HealthCare />}
+        {activeTab === "Visual" && <Symptom />}
+        {activeTab === "Medication" && <Medication />}
+      </div>
+    </section>
+  );
 };
 
 export default HomePatient;

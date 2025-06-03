@@ -7,12 +7,14 @@ import CTA from "../components/home/CTA";
 const HomePage = () => {
 	return (
 		<PagesLayout>
-			<Hero />
-			<Features />
-			<CTA />
-			
-		</PagesLayout>
+      <div style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
+        <Hero />
+        <Features />
+        <CTA />
+      </div>
+    </PagesLayout>
 	);
 };
 
 export default HomePage;
+

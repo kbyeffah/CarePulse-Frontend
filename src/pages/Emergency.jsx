@@ -20,7 +20,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Fix for default marker icon in Leaflet (often needed with Webpack/Create React App)
+// Fix for default marker icon in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -28,9 +28,8 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-
 const Emergency = () => {
-  const [currentStep, setCurrentStep] = useState(1); // 1: Alert Button, 2: Details, 3: Location, 4: Submit, 5: Status
+  const [currentStep, setCurrentStep] = useState(1);
   const [emergencyStatus, setEmergencyStatus] = useState("idle");
   const [progress, setProgress] = useState(0);
   const [selectedBodyPart, setSelectedBodyPart] = useState("Head");
@@ -38,19 +37,18 @@ const Emergency = () => {
   const [customMessage, setCustomMessage] = useState("");
   const [selectedPhrase, setSelectedPhrase] = useState("");
   const [userLocation, setUserLocation] = useState({
-    autoDetected: "Detecting...", // Stores the full display name from Nominatim
-    manual: "", // Stores the full display name from Nominatim after geocoding manual input
-    manualInputString: "", // New: Stores the raw text the user types
-    coordinates: null, // Stores [latitude, longitude]
-    mapCenter: [5.6037, -0.1870], // Default to center of Accra for initial map load
-    zoom: 10, // Default zoom level for Accra
+    autoDetected: "Detecting...",
+    manual: "",
+    manualInputString: "",
+    coordinates: null,
+    mapCenter: [5.6037, -0.1870],
+    zoom: 10,
     locationError: null,
   });
-  const [submittedAlert, setSubmittedAlert] = useState(null); // Stores the final alert data
-  const [locationConfirmed, setLocationConfirmed] = useState(false); // Track if location is confirmed
+  const [submittedAlert, setSubmittedAlert] = useState(null);
+  const [locationConfirmed, setLocationConfirmed] = useState(false);
 
   const bodyParts = ["Head", "Chest", "Abdomen", "Heart", "General", "Pain"];
-
   const symptomsMap = {
     Head: ["Headache", "Dizziness", "Blurred vision", "Ear pain", "Sore throat"],
     Chest: ["Chest pain", "Shortness of breath", "Palpitations"],
@@ -59,7 +57,6 @@ const Emergency = () => {
     General: ["Fever", "Fatigue", "Weakness", "Chills", "Rash"],
     Pain: ["Back pain", "Joint pain", "Muscle pain", "Sharp pain", "Dull pain"],
   };
-
   const emergencyPhrases = [
     "I can't breathe",
     "There is bleeding",
@@ -73,14 +70,11 @@ const Emergency = () => {
     "I need medication",
   ];
 
-  // Function to geocode an address
   const geocodeAddress = useCallback(async (address) => {
-    if (!address) {
-      return { coords: null, displayName: "" };
-    }
+    if (!address) return { coords: null, displayName: "" };
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=gh` // Limit to Ghana
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=gh`
       );
       const data = await response.json();
       if (data && data.length > 0) {
@@ -94,17 +88,13 @@ const Emergency = () => {
     }
   }, []);
 
-  // Auto-detect location using Geolocation API and reverse geocoding
   useEffect(() => {
-    // Only attempt detection if on step 3 and autoDetected is still 'Detecting...' AND manualInputString is empty (prioritize manual if user starts typing)
     if (currentStep === 3 && userLocation.autoDetected === "Detecting..." && userLocation.manualInputString === "") {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
             const newCoordinates = [latitude, longitude];
-
-            // Reverse geocoding using OpenStreetMap Nominatim API
             try {
               const response = await fetch(
                 `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
@@ -114,16 +104,16 @@ const Emergency = () => {
                 setUserLocation((prev) => ({
                   ...prev,
                   autoDetected: data.display_name,
-                  coordinates: newCoordinates, // Ensure coordinates are set from auto-detect
-                  mapCenter: newCoordinates, // Center map on detected location
-                  zoom: 13, // Zoom in on detected location
+                  coordinates: newCoordinates,
+                  mapCenter: newCoordinates,
+                  zoom: 13,
                   locationError: null,
                 }));
               } else {
                 setUserLocation((prev) => ({
                   ...prev,
                   autoDetected: `Lat: ${latitude}, Lon: ${longitude} (Address not found)`,
-                  coordinates: newCoordinates, // Ensure coordinates are set from auto-detect
+                  coordinates: newCoordinates,
                   mapCenter: newCoordinates,
                   zoom: 13,
                   locationError: null,
@@ -134,7 +124,7 @@ const Emergency = () => {
               setUserLocation((prev) => ({
                 ...prev,
                 autoDetected: `Lat: ${latitude}, Lon: ${longitude} (Failed to get address details)`,
-                coordinates: newCoordinates, // Ensure coordinates are set from auto-detect
+                coordinates: newCoordinates,
                 mapCenter: newCoordinates,
                 zoom: 13,
                 locationError: "Failed to get address details. Please check your internet connection.",
@@ -162,19 +152,19 @@ const Emergency = () => {
               ...prev,
               autoDetected: `Could not detect location.`,
               locationError: errorMessage,
-              mapCenter: [5.6037, -0.1870], // Default to Accra center if detection fails
+              mapCenter: [5.6037, -0.1870],
               zoom: 10,
-              coordinates: null, // Clear coordinates if detection failed
+              coordinates: null,
             }));
           },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // High accuracy, 10s timeout, no cached position
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       } else {
         setUserLocation((prev) => ({
           ...prev,
           autoDetected: "Geolocation not supported by this browser.",
           locationError: "Geolocation API is not supported by your browser.",
-          mapCenter: [5.6037, -0.1870], // Default to Accra center
+          mapCenter: [5.6037, -0.1870],
           zoom: 10,
           coordinates: null,
         }));
@@ -182,11 +172,7 @@ const Emergency = () => {
     }
   }, [currentStep, userLocation.autoDetected, userLocation.manualInputString]);
 
-
-  const handleInitialEmergencyAlert = () => {
-    setCurrentStep(2); // Move to Emergency Details step
-  };
-
+  const handleInitialEmergencyAlert = () => setCurrentStep(2);
   const handleTextToSpeech = (text) => {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -204,24 +190,19 @@ const Emergency = () => {
 
   const handleSubmitAlert = () => {
     setEmergencyStatus("sending");
-    setCurrentStep(5); // Move to status display
-
-    // Determine the final location string and coordinates to submit
+    setCurrentStep(5);
     let finalLocationString;
     let finalCoordinates;
 
     if (userLocation.manual && userLocation.coordinates) {
-      // If manual input resulted in geocoded coordinates, use that
       finalLocationString = userLocation.manual;
       finalCoordinates = userLocation.coordinates;
     } else if (userLocation.autoDetected && userLocation.coordinates) {
-      // Otherwise, use auto-detected if available and has coordinates
       finalLocationString = userLocation.autoDetected;
       finalCoordinates = userLocation.coordinates;
     } else {
-      // Fallback if neither works well
       finalLocationString = userLocation.manualInputString || userLocation.autoDetected || "Location not specified.";
-      finalCoordinates = null; // No reliable coordinates
+      finalCoordinates = null;
     }
 
     const alertData = {
@@ -233,7 +214,6 @@ const Emergency = () => {
     };
     setSubmittedAlert(alertData);
 
-    // Simulate progress
     let currentProgress = 0;
     const interval = setInterval(() => {
       currentProgress += 10;
@@ -241,10 +221,7 @@ const Emergency = () => {
       if (currentProgress >= 100) {
         clearInterval(interval);
         setEmergencyStatus("sent");
-        // Simulate acknowledgment after 2 seconds
-        setTimeout(() => {
-          setEmergencyStatus("acknowledged");
-        }, 2000);
+        setTimeout(() => setEmergencyStatus("acknowledged"), 2000);
       }
     }, 200);
   };
@@ -260,68 +237,65 @@ const Emergency = () => {
       setUserLocation({
         autoDetected: "Detecting...",
         manual: "",
-        manualInputString: "", // Reset raw input too
+        manualInputString: "",
         coordinates: null,
-        mapCenter: [5.6037, -0.1870], // Reset to default Accra center
+        mapCenter: [5.6037, -0.1870],
         zoom: 10,
         locationError: null,
       });
       setSubmittedAlert(null);
-      setLocationConfirmed(false); // Reset location confirmation
+      setLocationConfirmed(false);
     }
   };
 
-  // Handler for confirming auto-detected location
   const handleConfirmLocation = () => {
     setLocationConfirmed(true);
-    // When auto-detected is confirmed, we can treat it as the "final" manual input if the user didn't type
     if (userLocation.autoDetected && !userLocation.manualInputString) {
-      setUserLocation(prev => ({
+      setUserLocation((prev) => ({
         ...prev,
-        manual: prev.autoDetected, // Use auto-detected as the 'manual' value if user confirms it
-        manualInputString: "" // Clear raw manual input if any
+        manual: prev.autoDetected,
+        manualInputString: "",
       }));
     }
   };
 
-  // Handler for manual location input change
   const handleManualLocationChange = async (e) => {
     const rawInput = e.target.value;
     setUserLocation((prev) => ({ ...prev, manualInputString: rawInput }));
 
-    if (rawInput.length > 5) { // Only geocode if enough characters are typed
+    if (rawInput.length > 5) {
       setUserLocation((prev) => ({ ...prev, locationError: "Searching for location...", manual: "" }));
-      const { coords, displayName } = await geocodeAddress(rawInput + ", Ghana"); // Add "Ghana" for better results
+      const { coords, displayName } = await geocodeAddress(rawInput + ", Ghana");
 
       if (coords && displayName) {
         setUserLocation((prev) => ({
           ...prev,
           coordinates: coords,
           mapCenter: coords,
-          zoom: 15, // Zoom in on the manually entered location
-          manual: displayName, // Store the geocoded display name here
+          zoom: 15,
+          manual: displayName,
           locationError: null,
         }));
-        setLocationConfirmed(true); // Manually entering and geocoding implies confirmation
+        setLocationConfirmed(true);
       } else {
         setUserLocation((prev) => ({
           ...prev,
-          coordinates: null, // Clear coordinates if geocoding fails
-          mapCenter: [5.6037, -0.1870], // Revert to Accra center
+          coordinates: null,
+          mapCenter: [5.6037, -0.1870],
           zoom: 10,
-          manual: "", // Clear geocoded manual name
+          manual: "",
           locationError: "Could not find address. Please be more specific or use auto-detect.",
         }));
-        setLocationConfirmed(false); // If geocoding failed, location is not confirmed
+        setLocationConfirmed(false);
       }
     } else {
-        setUserLocation((prev) => ({
-            ...prev,
-            locationError: null,
-            coordinates: null, // Clear coords if input is too short
-            manual: "" // Clear geocoded manual name
-        }));
-        setLocationConfirmed(false); // Not enough input to confirm
+      setUserLocation((prev) => ({
+        ...prev,
+        locationError: null,
+        coordinates: null,
+        manual: "",
+      }));
+      setLocationConfirmed(false);
     }
   };
 
@@ -330,12 +304,12 @@ const Emergency = () => {
     const displayCoordinates = userLocation.coordinates;
 
     switch (currentStep) {
-      case 1: // Initial Alert Button
+      case 1:
         return (
-          <div className="flex flex-col items-center justify-center gap-4 p-6 border rounded-lg bg-red-50 pt-32">
+          <div className="flex flex-col items-center justify-center gap-4 p-6 border rounded-lg bg-red-50 pt-32" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
             <HeartPulse className="h-16 w-16 text-red-600 animate-pulse" />
-            <h3 className="text-xl font-bold text-center">Request Immediate Help</h3>
-            <p className="text-center text-gray-600">
+            <h3 className="text-xl font-bold text-center" style={{ color: 'var(--text-color)' }}>Request Immediate Help</h3>
+            <p className="text-center text-gray-600" style={{ color: 'var(--text-color)' }}>
               Press the button below to alert medical staff of an emergency situation.
             </p>
             <button
@@ -348,19 +322,17 @@ const Emergency = () => {
           </div>
         );
 
-      case 2: // Emergency Details (Symptoms & Communication)
+      case 2:
         return (
-          <div className="space-y-6">
-            {/* Symptoms Section */}
-            <div className="bg-white border rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+          <div className="space-y-6" style={{ backgroundColor: 'var(--background-color)' }}>
+            <div className="bg-white border rounded-lg shadow-sm p-6" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <h3 className="text-lg font-bold mb-2 flex items-center gap-2" style={{ color: 'var(--text-color)' }}>
                 <AlertTriangle className="h-5 w-5 text-red-600" />
                 Report Emergency Symptoms
               </h3>
-              <p className="text-gray-600 text-sm mb-4">
+              <p className="text-gray-600 text-sm mb-4" style={{ color: 'var(--text-color)' }}>
                 Quickly select symptoms to report in an emergency situation.
               </p>
-
               <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-4">
                 {bodyParts.map((part) => (
                   <button
@@ -376,9 +348,8 @@ const Emergency = () => {
                   </button>
                 ))}
               </div>
-
-              <div className="mb-4 border rounded p-4">
-                <h4 className="font-medium mb-2">Select symptoms for {selectedBodyPart}:</h4>
+              <div className="mb-4 border rounded p-4" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+                <h4 className="font-medium mb-2" style={{ color: 'var(--text-color)' }}>Select symptoms for {selectedBodyPart}:</h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {symptomsMap[selectedBodyPart].map((symptom) => (
                     <button
@@ -395,25 +366,21 @@ const Emergency = () => {
                   ))}
                 </div>
               </div>
-
-              <div className="bg-gray-100 p-4 rounded">
-                <h4 className="font-medium">Selected Symptoms:</h4>
-                <p className="text-sm mt-1">
+              <div className="bg-gray-100 p-4 rounded" style={{ backgroundColor: 'var(--card-bg)' }}>
+                <h4 className="font-medium" style={{ color: 'var(--text-color)' }}>Selected Symptoms:</h4>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-color)' }}>
                   {selectedSymptoms.length > 0 ? selectedSymptoms.join(", ") : "None"}
                 </p>
               </div>
             </div>
-
-            {/* Communication Section */}
-            <div className="bg-white border rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+            <div className="bg-white border rounded-lg shadow-sm p-6" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <h3 className="text-lg font-bold mb-2 flex items-center gap-2" style={{ color: 'var(--text-color)' }}>
                 <MessageSquare className="h-5 w-5 text-red-600" />
                 Emergency Communication
               </h3>
-              <p className="text-gray-600 text-sm mb-4">
+              <p className="text-gray-600 text-sm mb-4" style={{ color: 'var(--text-color)' }}>
                 Use pre-defined phrases or type a custom message for emergency communication.
               </p>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                 {emergencyPhrases.map((phrase, index) => (
                   <button
@@ -425,7 +392,7 @@ const Emergency = () => {
                     }`}
                     onClick={() => {
                       setSelectedPhrase(phrase);
-                      setCustomMessage(""); // Clear custom message if a phrase is selected
+                      setCustomMessage("");
                       handleTextToSpeech(phrase);
                     }}
                   >
@@ -434,52 +401,50 @@ const Emergency = () => {
                   </button>
                 ))}
               </div>
-
               <div className="mt-4">
-                <label htmlFor="custom-message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="custom-message" className="block text-sm font-medium text-gray-700 mb-2" style={{ color: 'var(--text-color)' }}>
                   Custom Message (Optional):
                 </label>
                 <textarea
                   id="custom-message"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-sm"
                   rows="3"
                   placeholder="Type your message here..."
                   value={customMessage}
                   onChange={(e) => {
                     setCustomMessage(e.target.value);
-                    setSelectedPhrase(""); // Clear selected phrase if a custom message is typed
+                    setSelectedPhrase("");
                   }}
+                  style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)', color: 'var(--text-color)' }}
                 ></textarea>
               </div>
             </div>
           </div>
         );
 
-      case 3: // Confirm Location with Map
+      case 3:
         return (
-          <div className="space-y-4 p-6 border rounded-lg bg-red-50">
-            <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+          <div className="space-y-4 p-6 border rounded-lg bg-red-50" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+            <h3 className="text-lg font-bold mb-2 flex items-center gap-2" style={{ color: 'var(--text-color)' }}>
               <MapPin className="h-5 w-5 text-red-600" />
               Confirm Your Location in Ghana
             </h3>
-            <p className="text-gray-600 text-sm mb-4">
+            <p className="text-gray-600 text-sm mb-4" style={{ color: 'var(--text-color)' }}>
               Your precise location helps emergency services find you quickly. The map will display your detected location within Ghana.
               Please confirm your location or enter it manually below.
             </p>
-
             {userLocation.locationError && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong className="font-bold">Location Error!</strong>
-                <span className="block sm:inline ml-2">{userLocation.locationError}</span>
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+                <strong className="font-bold" style={{ color: 'var(--text-color)' }}>Location Error!</strong>
+                <span className="block sm:inline ml-2" style={{ color: 'var(--text-color)' }}>{userLocation.locationError}</span>
               </div>
             )}
-
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <p className="font-medium">Auto-detected Location:</p>
-              <p className="text-gray-700 text-sm mt-1">
+            <div className="bg-white p-4 rounded-lg shadow-sm" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <p className="font-medium" style={{ color: 'var(--text-color)' }}>Auto-detected Location:</p>
+              <p className="text-gray-700 text-sm mt-1" style={{ color: 'var(--text-color)' }}>
                 {userLocation.autoDetected}
                 {userLocation.autoDetected !== "Detecting..." && userLocation.coordinates && (
-                    <span className="ml-2 text-green-600">(Lat: {userLocation.coordinates[0].toFixed(4)}, Lon: {userLocation.coordinates[1].toFixed(4)})</span>
+                  <span className="ml-2 text-green-600">(Lat: {userLocation.coordinates[0].toFixed(4)}, Lon: {userLocation.coordinates[1].toFixed(4)})</span>
                 )}
               </p>
               {!locationConfirmed && userLocation.autoDetected !== "Detecting..." && !userLocation.locationError && !userLocation.manualInputString && (
@@ -491,104 +456,96 @@ const Emergency = () => {
                 </button>
               )}
             </div>
-
-            {/* Map Integration */}
-            <div className="w-full h-80 bg-gray-200 rounded-lg overflow-hidden relative">
+            <div className="w-full h-80 bg-gray-200 rounded-lg overflow-hidden relative" style={{ backgroundColor: 'var(--card-bg)' }}>
               {userLocation.coordinates || userLocation.mapCenter ? (
                 <MapContainer
                   center={userLocation.mapCenter}
                   zoom={userLocation.zoom}
                   scrollWheelZoom={true}
                   className="w-full h-full z-0"
-                  key={JSON.stringify(userLocation.mapCenter) + userLocation.zoom} // Force remount when center or zoom changes
+                  key={JSON.stringify(userLocation.mapCenter) + userLocation.zoom}
                 >
                   <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
                   {userLocation.coordinates && (
                     <Marker position={userLocation.coordinates}>
-                      <Popup>
-                        {userLocation.manual ? userLocation.manual : userLocation.autoDetected}
-                      </Popup>
+                      <Popup>{userLocation.manual ? userLocation.manual : userLocation.autoDetected}</Popup>
                     </Marker>
                   )}
                 </MapContainer>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">
+                <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm" style={{ color: 'var(--text-color)' }}>
                   <Loader2 className="h-8 w-8 mr-2 animate-spin" /> Loading Map...
                 </div>
               )}
             </div>
-
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <label htmlFor="manual-location" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="bg-white p-4 rounded-lg shadow-sm" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <label htmlFor="manual-location" className="block text-sm font-medium text-gray-700 mb-2" style={{ color: 'var(--text-color)' }}>
                 Manual Location / Additional Details (Optional):
               </label>
               <input
                 type="text"
                 id="manual-location"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-sm"
                 placeholder="e.g., Apartment 4B, near the park entrance, landmark details"
-                value={userLocation.manualInputString} // Bind to the raw input string
+                value={userLocation.manualInputString}
                 onChange={handleManualLocationChange}
+                style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)', color: 'var(--text-color)' }}
               />
-              <p className="text-gray-500 text-xs mt-1">
+              <p className="text-gray-500 text-xs mt-1" style={{ color: 'var(--text-color)' }}>
                 Provide more precise details if auto-detected location is inaccurate, or if you need to specify a different location within Ghana.
               </p>
               {userLocation.manual && userLocation.manualInputString && (
-                 <p className="text-sm mt-2 text-green-700">
-                    Geocoded to: <span className="font-medium">{userLocation.manual}</span>
-                 </p>
+                <p className="text-sm mt-2 text-green-700" style={{ color: 'var(--text-color)' }}>
+                  Geocoded to: <span className="font-medium">{userLocation.manual}</span>
+                </p>
               )}
             </div>
           </div>
         );
 
-      case 4: // Review & Submit
+      case 4:
         return (
-          <div className="space-y-4 p-6 border rounded-lg bg-red-50">
-            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <div className="space-y-4 p-6 border rounded-lg bg-red-50" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--text-color)' }}>
               <CheckCircle className="h-5 w-5 text-red-600" />
               Review Your Emergency Alert
             </h3>
-
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h4 className="font-medium mb-2">Selected Symptoms:</h4>
-              <p className="text-gray-700 text-sm">
+            <div className="bg-white p-4 rounded-lg shadow-sm" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <h4 className="font-medium mb-2" style={{ color: 'var(--text-color)' }}>Selected Symptoms:</h4>
+              <p className="text-gray-700 text-sm" style={{ color: 'var(--text-color)' }}>
                 {selectedSymptoms.length > 0 ? selectedSymptoms.join(", ") : "No symptoms reported."}
               </p>
             </div>
-
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h4 className="font-medium mb-2">Emergency Message:</h4>
-              <p className="text-gray-700 text-sm">
+            <div className="bg-white p-4 rounded-lg shadow-sm" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <h4 className="font-medium mb-2" style={{ color: 'var(--text-color)' }}>Emergency Message:</h4>
+              <p className="text-gray-700 text-sm" style={{ color: 'var(--text-color)' }}>
                 {customMessage || selectedPhrase || "No specific message provided."}
               </p>
             </div>
-
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h4 className="font-medium mb-2">Your Location:</h4>
-              <p className="text-gray-700 text-sm">
+            <div className="bg-white p-4 rounded-lg shadow-sm" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+              <h4 className="font-medium mb-2" style={{ color: 'var(--text-color)' }}>Your Location:</h4>
+              <p className="text-gray-700 text-sm" style={{ color: 'var(--text-color)' }}>
                 {displayLocation || "Location not provided."}
               </p>
               {displayCoordinates && (
-                <p className="text-gray-600 text-xs mt-1">
+                <p className="text-gray-600 text-xs mt-1" style={{ color: 'var(--text-color)' }}>
                   Coordinates: {displayCoordinates[0].toFixed(4)}, {displayCoordinates[1].toFixed(4)}
                 </p>
               )}
             </div>
-
-            <p className="text-center text-gray-700 text-sm mt-4">
+            <p className="text-center text-gray-700 text-sm mt-4" style={{ color: 'var(--text-color)' }}>
               Please review all information carefully before submitting your alert.
             </p>
           </div>
         );
 
-      case 5: // Status & Tracking
+      case 5:
         return (
-          <div className="flex flex-col items-center justify-center gap-6 p-6 border rounded-lg bg-red-50">
-            <h3 className="text-xl font-bold text-center flex items-center gap-2 text-red-700">
+          <div className="flex flex-col items-center justify-center gap-6 p-6 border rounded-lg bg-red-50" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+            <h3 className="text-xl font-bold text-center flex items-center gap-2 text-red-700" style={{ color: 'var(--text-color)' }}>
               {emergencyStatus === "sending" && (
                 <Loader2 className="h-6 w-6 animate-spin text-red-600" />
               )}
@@ -602,41 +559,36 @@ const Emergency = () => {
               {emergencyStatus === "sent" && "Alert Sent Successfully!"}
               {emergencyStatus === "acknowledged" && "Ambulance Dispatched - Help is Coming!"}
             </h3>
-
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="w-full bg-gray-200 rounded-full h-3" style={{ backgroundColor: 'var(--card-bg)' }}>
               <div
                 className="bg-red-600 h-3 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-
             {emergencyStatus === "acknowledged" && (
               <div className="w-full space-y-3 text-center">
-                <p className="text-lg font-semibold text-gray-800">
+                <p className="text-lg font-semibold text-gray-800" style={{ color: 'var(--text-color)' }}>
                   Ambulance Contacted: <span className="text-green-700">Confirmed</span>
                 </p>
-                <p className="text-lg font-semibold text-gray-800">
+                <p className="text-lg font-semibold text-gray-800" style={{ color: 'var(--text-color)' }}>
                   Estimated Time of Arrival (ETA): <span className="text-red-700">~5 minutes</span>
                 </p>
                 {submittedAlert && (
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600" style={{ color: 'var(--text-color)' }}>
                     <p>Alert submitted at: {submittedAlert.timestamp}</p>
                     <p>Location shared: {submittedAlert.location}</p>
                     {submittedAlert.coordinates && (
-                        <p>Coordinates: {submittedAlert.coordinates[0].toFixed(4)}, {submittedAlert.coordinates[1].toFixed(4)}</p>
+                      <p>Coordinates: {submittedAlert.coordinates[0].toFixed(4)}, {submittedAlert.coordinates[1].toFixed(4)}</p>
                     )}
                   </div>
                 )}
               </div>
             )}
-
-            {/* Live Map in Status Section */}
-            <div className="w-full h-64 bg-gray-300 rounded-lg overflow-hidden relative">
+            <div className="w-full h-64 bg-gray-300 rounded-lg overflow-hidden relative" style={{ backgroundColor: 'var(--card-bg)' }}>
               {submittedAlert && submittedAlert.coordinates ? (
                 <MapContainer
                   center={submittedAlert.coordinates}
-                  zoom={submittedAlert.coordinates ? 15 : userLocation.zoom} // Zoom closer if coordinates available
+                  zoom={submittedAlert.coordinates ? 15 : userLocation.zoom}
                   scrollWheelZoom={false}
                   dragging={false}
                   doubleClickZoom={false}
@@ -652,12 +604,11 @@ const Emergency = () => {
                   </Marker>
                 </MapContainer>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">
+                <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm" style={{ color: 'var(--text-color)' }}>
                   <MapPin className="h-8 w-8 mr-2" /> Map Location Not Available
                 </div>
               )}
             </div>
-
             <div className="w-full flex flex-col md:flex-row gap-4">
               <button
                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
@@ -688,28 +639,26 @@ const Emergency = () => {
 
   return (
     <PagesLayout>
-      <div className="p-6 space-y-6 max-w-4xl mx-auto min-h-screen mt-[5%]">
-        <div className="bg-white border border-red-200 rounded-lg shadow-lg">
-          <div className="bg-red-50 px-6 py-4 border-b border-red-200 rounded-t-lg">
-            <h2 className="text-red-700 text-xl font-bold flex items-center gap-2">
+      <div className="p-6 space-y-6 max-w-4xl mx-auto min-h-screen mt-[5%]" style={{ backgroundColor: 'var(--background-color)' }}>
+        <div className="bg-white border border-red-200 rounded-lg shadow-lg" style={{ borderColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+          <div className="bg-red-50 px-6 py-4 border-b border-red-200 rounded-t-lg" style={{ borderBottomColor: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}>
+            <h2 className="text-red-700 text-xl font-bold flex items-center gap-2" style={{ color: 'var(--text-color)' }}>
               <AlertTriangle className="h-5 w-5" />
               Emergency Assistance
             </h2>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-gray-600 text-sm mt-1" style={{ color: 'var(--text-color)' }}>
               Follow the steps to request immediate medical assistance.
             </p>
           </div>
-
           <div className="p-6">
-            {/* Wizard Step Indicator */}
             <div className="mb-6">
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 rounded-full h-2" style={{ backgroundColor: 'var(--card-bg)' }}>
                 <div
                   className="bg-red-500 h-2 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${getStepProgress()}%` }}
                 ></div>
               </div>
-              <div className="flex justify-between text-xs text-gray-600 mt-2">
+              <div className="flex justify-between text-xs text-gray-600 mt-2" style={{ color: 'var(--text-color)' }}>
                 <span>Step 1: Alert</span>
                 <span>Step 2: Details</span>
                 <span>Step 3: Location</span>
@@ -717,34 +666,29 @@ const Emergency = () => {
                 <span>Step 5: Status</span>
               </div>
             </div>
-
             {renderStepContent()}
-
-            {/* Navigation Buttons for Wizard Steps */}
-            {currentStep > 1 && currentStep < 5 && ( // Don't show on first step or status step
+            {currentStep > 1 && currentStep < 5 && (
               <div className="flex justify-between mt-6">
                 <button
                   onClick={() => {
                     setCurrentStep((prev) => prev - 1);
-                    setLocationConfirmed(false); // Reset confirmation on back
+                    setLocationConfirmed(false);
                   }}
-                  className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center gap-2"
+                  className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center gap-2" style={{ color: 'var(--text-color)', backgroundColor: 'var(--card-bg)' }}
                 >
                   <ChevronLeft className="h-5 w-5" /> Back
                 </button>
                 {currentStep < 4 ? (
                   <button
                     onClick={() => setCurrentStep((prev) => prev + 1)}
-                    // Disable 'Next' button if on step 3 and location is not confirmed
                     disabled={currentStep === 3 && !locationConfirmed}
-                    className={`px-6 py-3 text-white rounded-lg font-semibold transition-colors flex items-center gap-2
-                      ${currentStep === 3 && !locationConfirmed ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}
-                    `}
+                    className={`px-6 py-3 text-white rounded-lg font-semibold transition-colors flex items-center gap-2 ${
+                      currentStep === 3 && !locationConfirmed ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                    }`}
                   >
                     Next <ChevronRight className="h-5 w-5" />
                   </button>
                 ) : (
-                  // This is the desired "Submit Alert" button (green style)
                   <button
                     onClick={handleSubmitAlert}
                     className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center gap-2"

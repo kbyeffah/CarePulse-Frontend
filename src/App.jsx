@@ -11,25 +11,21 @@ import Signup from "./pages/Login/Signup/SignUp";
 
 
 function App() {
-	return (
-		<>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/login" element={<Login/>} />
-					<Route path="/signup" element={<Signup/>} />
-
-					
-
-					<Route path="/healthcareworker" element={<HealthcareWorker/>}/>
-					<Route path="/emergency" element={<Emergency/>}/>
-
-					<Route path="/patient" element={<PatientDashboard />} />
-
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+  return (
+    <div style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)', minHeight: '100vh' }}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/healthcareworker" element={<HealthcareWorker />} />
+          <Route path="/emergency" element={<Emergency />} />
+          <Route path="/patient" element={<PatientDashboard />} />
+          <Route path="*" element={<div style={{ padding: '20px', textAlign: 'center' }}><h1 style={{ color: 'var(--text-color)' }}>404 - Page Not Found</h1></div>} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
